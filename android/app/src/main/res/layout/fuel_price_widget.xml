@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fuel_price_widget_background"
+    android:orientation="vertical"
+    android:padding="14dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/widget_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Petrolimex"
+            android:textColor="#0A54A8"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/widget_updated_at"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dang cho cap nhat"
+            android:textColor="#667085"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/widget_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:background="#FFF5E6"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:padding="6dp"
+        android:textColor="#744400"
+        android:textSize="11sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/product_1"
+        style="@style/FuelPriceWidgetRow">
+
+        <TextView
+            android:id="@+id/product_1_name"
+            style="@style/FuelPriceWidgetName" />
+
+        <TextView
+            android:id="@+id/product_1_price"
+            style="@style/FuelPriceWidgetPrice" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/product_2"
+        style="@style/FuelPriceWidgetRow">
+
+        <TextView
+            android:id="@+id/product_2_name"
+            style="@style/FuelPriceWidgetName" />
+
+        <TextView
+            android:id="@+id/product_2_price"
+            style="@style/FuelPriceWidgetPrice" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/product_3"
+        style="@style/FuelPriceWidgetRow">
+
+        <TextView
+            android:id="@+id/product_3_name"
+            style="@style/FuelPriceWidgetName" />
+
+        <TextView
+            android:id="@+id/product_3_price"
+            style="@style/FuelPriceWidgetPrice" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/product_4"
+        style="@style/FuelPriceWidgetRow">
+
+        <TextView
+            android:id="@+id/product_4_name"
+            style="@style/FuelPriceWidgetName" />
+
+        <TextView
+            android:id="@+id/product_4_price"
+            style="@style/FuelPriceWidgetPrice" />
+    </LinearLayout>
+</LinearLayout>
