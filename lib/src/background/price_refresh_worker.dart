@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:workmanager/workmanager.dart';
 
 import '../data/fuel_price_repository.dart';
@@ -25,6 +26,7 @@ class PriceRefreshWorker {
   }
 
   static Future<void> runOnce() async {
+    await initializeDateFormatting('vi_VN');
     final repository = FuelPriceRepository(
       service: PetrolimexPriceService(),
       widgetSync: const WidgetDataSync(),

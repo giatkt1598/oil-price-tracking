@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 import 'src/background/price_refresh_worker.dart';
@@ -9,6 +10,7 @@ import 'src/models/fuel_price_snapshot.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('vi_VN');
   await PriceRefreshWorker.initialize();
   runApp(const OilPriceTrackingApp());
 }
