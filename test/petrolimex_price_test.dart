@@ -68,13 +68,13 @@ void main() {
   });
 
   group('WidgetDataSync', () {
-    test('builds up to four widget rows and handles empty snapshot', () {
+    test('builds up to six widget rows and handles empty snapshot', () {
       final sync = WidgetDataSync();
       final rows = sync.buildRows(
         FuelPriceSnapshot(
           updatedAt: DateTime.parse('2026-06-04T07:56:28.241Z'),
           products: List.generate(
-            5,
+            7,
             (index) => FuelPrice(
               id: '$index',
               title: 'Product $index',
@@ -89,7 +89,7 @@ void main() {
         ),
       );
 
-      expect(rows, hasLength(4));
+      expect(rows, hasLength(6));
       expect(rows.first.name, 'Product 0');
       expect(rows.first.price, '10.000 / 20.000');
 

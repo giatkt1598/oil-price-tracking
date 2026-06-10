@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -14,6 +15,7 @@ class PriceRefreshWorker {
 
   static Future<void> initialize() async {
     await Workmanager().initialize(callbackDispatcher);
+    await HomeWidget.registerInteractivityCallback(interactiveWidgetCallback);
     await Workmanager().registerPeriodicTask(
       refreshTaskUniqueName,
       refreshTaskName,
@@ -33,6 +35,13 @@ class PriceRefreshWorker {
     );
     await repository.refresh();
   }
+}
+
+@pragma('vm:entry-point')
+Future<void> interactiveWidgetCallback(Uri? data) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  DartPluginRegistrant.ensureInitialized();
+  await PriceRefreshWorker.runOnce();
 }
 
 @pragma('vm:entry-point')

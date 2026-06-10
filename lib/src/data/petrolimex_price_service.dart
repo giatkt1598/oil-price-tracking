@@ -37,13 +37,13 @@ class PetrolimexPriceService {
 
     if (response.statusCode != 200) {
       throw PetrolimexPriceException(
-        'Petrolimex tra ve HTTP ${response.statusCode}',
+        'Petrolimex trả về HTTP ${response.statusCode}',
       );
     }
 
     final decoded = jsonDecode(utf8.decode(response.bodyBytes));
     if (decoded is! Map<String, dynamic>) {
-      throw const PetrolimexPriceException('Du lieu Petrolimex khong hop le');
+      throw const PetrolimexPriceException('Dữ liệu Petrolimex không hợp lệ');
     }
     return parseResponse(decoded);
   }
@@ -51,7 +51,7 @@ class PetrolimexPriceService {
   FuelPriceSnapshot parseResponse(Map<String, dynamic> json) {
     final objects = json['Objects'];
     if (objects is! List) {
-      throw const PetrolimexPriceException('Khong tim thay danh sach san pham');
+      throw const PetrolimexPriceException('Không tìm thấy danh sách sản phẩm');
     }
 
     final products =
@@ -63,7 +63,7 @@ class PetrolimexPriceService {
           ..sort((a, b) => a.orderIndex.compareTo(b.orderIndex));
 
     if (products.isEmpty) {
-      throw const PetrolimexPriceException('Bang gia Petrolimex dang trong');
+      throw const PetrolimexPriceException('Bảng giá Petrolimex đang trống');
     }
 
     final updatedAt = products

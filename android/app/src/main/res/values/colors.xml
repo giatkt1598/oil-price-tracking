@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fuel_widget_background">#FFFFFFFF</color>
+    <color name="fuel_widget_border">#FFD7E2F0</color>
+    <color name="fuel_widget_primary_text">#FF101828</color>
+    <color name="fuel_widget_muted_text">#FF667085</color>
+    <color name="fuel_widget_price_text">#FF0A54A8</color>
+    <color name="fuel_widget_error_background">#FFFFF5E6</color>
+    <color name="fuel_widget_error_text">#FF744400</color>
+</resources>

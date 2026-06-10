@@ -77,11 +77,18 @@ class FuelPriceRepository {
     }
   }
 
+  Future<void> updateWidgetFromCache() async {
+    final snapshot = await loadCachedSnapshot();
+    if (snapshot != null) {
+      await _widgetSync.updateWithSnapshot(snapshot);
+    }
+  }
+
   String _friendlyError(Object error) {
     if (error is PetrolimexPriceException) {
       return error.message;
     }
-    return 'Khong the cap nhat du lieu luc nay';
+    return 'Không thể cập nhật dữ liệu lúc này';
   }
 }
 

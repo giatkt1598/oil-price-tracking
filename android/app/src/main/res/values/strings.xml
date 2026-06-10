@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Gia xang dau</string>
-    <string name="fuel_price_widget_description">Gia ban le xang dau Petrolimex</string>
+    <string name="app_name">Giá xăng dầu</string>
+    <string name="empty_label" translatable="false">&#8203;</string>
+    <string name="fuel_price_widget_description">Giá bán lẻ xăng dầu Petrolimex</string>
 </resources>

@@ -5,52 +5,88 @@ import 'package:intl/intl.dart';
 import 'src/background/price_refresh_worker.dart';
 import 'src/data/fuel_price_repository.dart';
 import 'src/data/petrolimex_price_service.dart';
+import 'src/data/theme_settings_store.dart';
 import 'src/data/widget_data_sync.dart';
 import 'src/models/fuel_price_snapshot.dart';
+import 'src/ui/settings_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('vi_VN');
   await PriceRefreshWorker.initialize();
-  runApp(const OilPriceTrackingApp());
+  final themeController = ThemeController();
+  await themeController.load();
+  runApp(OilPriceTrackingApp(themeController: themeController));
 }
 
 class OilPriceTrackingApp extends StatelessWidget {
-  const OilPriceTrackingApp({super.key});
+  const OilPriceTrackingApp({super.key, required this.themeController});
+
+  final ThemeController themeController;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Gia xang dau Petrolimex',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0A54A8),
-          brightness: Brightness.light,
-        ),
-        scaffoldBackgroundColor: const Color(0xFFF6F8FB),
-        appBarTheme: const AppBarTheme(
-          centerTitle: false,
-          backgroundColor: Color(0xFF0A54A8),
-          foregroundColor: Colors.white,
-          elevation: 0,
-        ),
-        cardTheme: CardThemeData(
-          color: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-            side: const BorderSide(color: Color(0xFFE1E7F0)),
+    return ListenableBuilder(
+      listenable: themeController,
+      builder: (context, _) {
+        return MaterialApp(
+          title: 'Giá xăng dầu Petrolimex',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF0A54A8),
+              brightness: Brightness.light,
+            ),
+            scaffoldBackgroundColor: const Color(0xFFF6F8FB),
+            appBarTheme: const AppBarTheme(
+              centerTitle: false,
+              backgroundColor: Color(0xFF0A54A8),
+              foregroundColor: Colors.white,
+              elevation: 0,
+            ),
+            cardTheme: CardThemeData(
+              color: Colors.white,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+                side: const BorderSide(color: Color(0xFFE1E7F0)),
+              ),
+            ),
           ),
-        ),
-      ),
-      home: const PriceHomePage(),
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFFFFD948),
+              brightness: Brightness.dark,
+            ),
+            scaffoldBackgroundColor: const Color(0xFF101418),
+            appBarTheme: const AppBarTheme(
+              centerTitle: false,
+              backgroundColor: Color(0xFF141A22),
+              foregroundColor: Colors.white,
+              elevation: 0,
+            ),
+            cardTheme: CardThemeData(
+              color: const Color(0xFF171D25),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+                side: const BorderSide(color: Color(0xFF2B3542)),
+              ),
+            ),
+            dividerColor: const Color(0xFF2B3542),
+          ),
+          themeMode: themeController.themeMode,
+          home: PriceHomePage(themeController: themeController),
+        );
+      },
     );
   }
 }
 
 class PriceHomePage extends StatefulWidget {
-  const PriceHomePage({super.key});
+  const PriceHomePage({super.key, required this.themeController});
+
+  final ThemeController themeController;
 
   @override
   State<PriceHomePage> createState() => _PriceHomePageState();
@@ -124,10 +160,24 @@ class _PriceHomePageState extends State<PriceHomePage> {
     final snapshot = _snapshot;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gia ban le xang dau'),
+        title: const Text('Giá bán lẻ xăng dầu'),
         actions: [
           IconButton(
-            tooltip: 'Cap nhat',
+            tooltip: 'Cài đặt',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => SettingsPage(
+                    currentSnapshot: _snapshot,
+                    themeController: widget.themeController,
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(Icons.settings_outlined),
+          ),
+          IconButton(
+            tooltip: 'Cập nhật',
             onPressed: _isRefreshing ? null : () => _refresh(),
             icon: _isRefreshing
                 ? const SizedBox.square(
@@ -221,8 +271,8 @@ class _HeaderCard extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         updatedAt == null
-                            ? 'Chua co du lieu cap nhat'
-                            : 'Cap nhat luc ${timeFormat.format(updatedAt.toLocal())}',
+                            ? 'Chưa có dữ liệu cập nhật'
+                            : 'Cập nhật lúc ${timeFormat.format(updatedAt.toLocal())}',
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
@@ -298,9 +348,9 @@ class _PriceTable extends StatelessWidget {
               fontWeight: FontWeight.w700,
             ),
             columns: const [
-              DataColumn(label: Text('San pham')),
-              DataColumn(label: Text('Vung 1'), numeric: true),
-              DataColumn(label: Text('Vung 2'), numeric: true),
+              DataColumn(label: Text('Sản phẩm')),
+              DataColumn(label: Text('Vùng 1'), numeric: true),
+              DataColumn(label: Text('Vùng 2'), numeric: true),
             ],
             rows: snapshot.products
                 .map(
@@ -331,7 +381,7 @@ class _SourceNote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Don vi: VND. Du lieu lay tu muc Gia ban le xang dau tren Petrolimex.',
+      'Đơn vị: VND. Dữ liệu lấy từ mục Giá bán lẻ xăng dầu trên Petrolimex.',
       style: Theme.of(
         context,
       ).textTheme.bodySmall?.copyWith(color: const Color(0xFF667085)),
@@ -368,12 +418,12 @@ class _EmptyState extends StatelessWidget {
           children: [
             const Icon(Icons.cloud_off_outlined, size: 42),
             const SizedBox(height: 12),
-            const Text('Chua tai duoc bang gia'),
+            const Text('Chưa tải được bảng giá'),
             const SizedBox(height: 12),
             FilledButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
-              label: const Text('Thu lai'),
+              label: const Text('Thử lại'),
             ),
           ],
         ),
