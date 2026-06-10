@@ -2,6 +2,7 @@
 <resources>
     <color name="fuel_widget_background">#66000000</color>
     <color name="fuel_widget_border">#33FFFFFF</color>
+    <color name="fuel_widget_brand_text">#FF0962AE</color>
     <color name="fuel_widget_primary_text">#FFFFFFFF</color>
     <color name="fuel_widget_muted_text">#CCFFFFFF</color>
     <color name="fuel_widget_price_text">#FFFFD948</color>

@@ -20,10 +20,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="end"
+            android:fontFamily="sans-serif-black"
             android:maxLines="1"
             android:text="Petrolimex"
-            android:textColor="@color/fuel_widget_primary_text"
-            android:textSize="16sp"
+            android:textColor="@color/fuel_widget_brand_text"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
