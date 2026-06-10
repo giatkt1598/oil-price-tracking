@@ -13,6 +13,10 @@ class PetrolimexPriceService {
     'portals.petrolimex.com.vn',
     '/~apis/portals/cms.item/search',
   );
+  static const _referer = 'https://www.petrolimex.com.vn/lien-he.html';
+  static const _webAppName = 'NGX Websites';
+  static const _webAppPlatform = 'Desktop PWA';
+  static const _webLanguage = 'vi-VN';
 
   final http.Client _client;
 
@@ -21,17 +25,21 @@ class PetrolimexPriceService {
       queryParameters: {
         'x-request': _base64UrlJson(_requestPayload()),
         'x-device-id': 'oil-price-tracking',
-        'x-app-name': _base64UrlText('NGX Websites'),
-        'x-app-platform': _base64UrlText('Flutter Android'),
-        'language': 'vi-VN',
+        'x-app-name': _base64UrlText(_webAppName),
+        'x-app-platform': _base64UrlText(_webAppPlatform),
+        'language': _webLanguage,
       },
     );
 
     final response = await _client.get(
       uri,
       headers: const {
-        'accept': 'application/json',
-        'referer': 'https://www.petrolimex.com.vn/lien-he.html',
+        'accept': 'application/json, text/javascript, */*; q=0.01',
+        'origin': 'https://www.petrolimex.com.vn',
+        'referer': _referer,
+        'user-agent':
+            'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 '
+            '(KHTML, like Gecko) Chrome/125.0 Mobile Safari/537.36',
       },
     );
 
