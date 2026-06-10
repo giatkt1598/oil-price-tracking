@@ -7,8 +7,12 @@ import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT
 import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.StyleSpan
 import android.util.TypedValue
 import android.view.View
 import android.widget.RemoteViews
@@ -190,7 +194,7 @@ class FuelPriceWidgetProvider : HomeWidgetProvider() {
           ),
       )
       if (visibleProductCount < 2) {
-        bindCompactUpdatedAt(this, widgetData)
+        bindCompactUpdatedAt(context, this, widgetData)
         bindCompactRow(
             this,
             widgetData,
@@ -246,16 +250,25 @@ class FuelPriceWidgetProvider : HomeWidgetProvider() {
   }
 
   private fun bindCompactUpdatedAt(
+      context: Context,
       views: RemoteViews,
       widgetData: SharedPreferences,
   ) {
+    val updatedAt = widgetData.getString("widget_updated_at", "Đang chờ cập nhật") ?: ""
+    val normalText =
+        SpannableString(updatedAt).apply {
+          setSpan(StyleSpan(Typeface.NORMAL), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
     views.setTextViewText(
         R.id.product_1_name,
-        widgetData.getString("widget_updated_at", "Đang chờ cập nhật"),
+        normalText,
     )
     views.setTextViewText(R.id.product_1_price, "")
-    views.setTextViewTextSize(R.id.product_1_name, TypedValue.COMPLEX_UNIT_SP, 11f)
-    views.setTextViewTextSize(R.id.product_1_price, TypedValue.COMPLEX_UNIT_SP, 11f)
+    val mutedTextColor = context.getColor(R.color.fuel_widget_muted_text)
+    views.setTextColor(R.id.product_1_name, mutedTextColor)
+    views.setTextColor(R.id.product_1_price, mutedTextColor)
+    views.setTextViewTextSize(R.id.product_1_name, TypedValue.COMPLEX_UNIT_SP, 16.5f)
+    views.setTextViewTextSize(R.id.product_1_price, TypedValue.COMPLEX_UNIT_SP, 16.5f)
     views.setViewVisibility(R.id.product_1, View.VISIBLE)
   }
 
