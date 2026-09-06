@@ -112,13 +112,64 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Upload APK to GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
-          body: |
-            Changes since previous release `${{ steps.release_notes.outputs.previous_tag || 'N/A' }}`:
+      - name: Create Gitea Release
+        env:
+          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+          GITEA_SERVER_URL: ${{ gitea.server_url }}
+          GITEA_REPOSITORY: ${{ gitea.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+          PREVIOUS_TAG: ${{ steps.release_notes.outputs.previous_tag }}
+          RELEASE_NOTES: ${{ steps.release_notes.outputs.notes }}
+        shell: bash
+        run: |
+          set -e
 
-            ${{ steps.release_notes.outputs.notes }}
-          files: build/app/outputs/flutter-apk/app-release.apk
+          API_URL="${GITEA_SERVER_URL}/api/v1"
+          REPO="${GITEA_REPOSITORY}"
+
+          echo "Creating release ${RELEASE_TAG}"
+
+          curl \
+            -X POST \
+            -H "Authorization: token ${GITEA_TOKEN}" \
+            -H "Content-Type: application/json" \
+            "${API_URL}/repos/${REPO}/releases" \
+            -d @- <<EOF
+          {
+            "tag_name": "${RELEASE_TAG}",
+            "name": "Release ${RELEASE_TAG}",
+            "body": "Changes since previous release \`${PREVIOUS_TAG:-N/A}\`:\n\n${RELEASE_NOTES}"
+          }
+          EOF
+
+      - name: Upload APK to Gitea Release
+        env:
+          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+          GITEA_SERVER_URL: ${{ gitea.server_url }}
+          GITEA_REPOSITORY: ${{ gitea.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          set -e
+
+          API_URL="${GITEA_SERVER_URL}/api/v1"
+          REPO="${GITEA_REPOSITORY}"
+
+          echo "Getting release ID..."
+
+          RELEASE_ID=$(curl -fsSL \
+            -H "Authorization: token ${GITEA_TOKEN}" \
+            "${API_URL}/repos/${REPO}/releases/tags/${RELEASE_TAG}" \
+            | jq -r '.id')
+
+          echo "Release ID: ${RELEASE_ID}"
+
+          echo "Uploading APK..."
+
+          curl -fsSL \
+            -X POST \
+            -H "Authorization: token ${GITEA_TOKEN}" \
+            -F "attachment=@build/app/outputs/flutter-apk/app-release.apk" \
+            "${API_URL}/repos/${REPO}/releases/${RELEASE_ID}/assets?name=app-release.apk"
+
+          echo "APK uploaded successfully."
