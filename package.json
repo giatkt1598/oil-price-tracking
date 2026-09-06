@@ -1,0 +1,21 @@
+{
+  "name": "oil-price-tracking",
+  "version": "1.2.3",
+  "description": "A new Flutter project.",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "splash": "flutter pub run flutter_native_splash:create",
+    "icon": "flutter pub run flutter_launcher_icons:main",
+    "build": "flutter build apk --release && node build-scripts/rename-apk.js",
+    "deploy": "node build-scripts/up-version.js && node build-scripts/publish.js",
+    "lint": "dart fix --apply"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT"
+}
