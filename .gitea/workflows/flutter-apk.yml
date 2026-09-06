@@ -83,7 +83,7 @@ jobs:
 
       - name: Upload release artifact
         id: upload_apk
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: flutter_offline_music_${{ github.run_number }}
           path: build/app/outputs/flutter-apk/app-release.apk
