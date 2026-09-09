@@ -1,6 +1,6 @@
 {
   "name": "oil-price-tracking",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A new Flutter project.",
   "main": "index.js",
   "type": "module",
